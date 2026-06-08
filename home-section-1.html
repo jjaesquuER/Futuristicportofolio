@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home – Tim 4</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --cyan:        #00f5ff;
+      --cyan-dim:    #00c8d4;
+      --blue-deep:   #0a0e1a;
+      --blue-mid:    #0d1b2a;
+      --blue-panel:  #0f2233;
+      --blue-card:   #112640;
+      --accent:      #38bdf8;
+      --accent2:     #7df9ff;
+      --glow:        0 0 20px rgba(0,245,255,0.35);
+      --glow-strong: 0 0 40px rgba(0,245,255,0.6);
+      --text-main:   #e0f4ff;
+      --text-muted:  #7eb8d4;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--blue-deep);
+      color: var(--text-main);
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 400;
+      overflow-x: hidden;
+    }
+
+    /* ── SCANLINE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,245,255,0.018) 2px,
+        rgba(0,245,255,0.018) 4px
+      );
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ── ANIMATED GRID BG ── */
+    .grid-bg {
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,245,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,245,255,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      animation: gridMove 20s linear infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+    @keyframes gridMove {
+      0%   { background-position: 0 0, 0 0; }
+      100% { background-position: 0 60px, 60px 0; }
+    }
+
+    /* ── FLOATING PARTICLES ── */
+    .particles { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
+    .particle {
+      position: absolute;
+      width: 2px; height: 2px;
+      background: var(--cyan);
+      border-radius: 50%;
+      opacity: 0;
+      animation: float linear infinite;
+    }
+    @keyframes float {
+      0%   { transform: translateY(100vh) translateX(0); opacity: 0; }
+      10%  { opacity: 0.8; }
+      90%  { opacity: 0.8; }
+      100% { transform: translateY(-10vh) translateX(30px); opacity: 0; }
+    }
+
+    /* ── HEADER ── */
+    header {
+      position: fixed;
+      width: 100%;
+      background: rgba(10,14,26,0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(0,245,255,0.15);
+      padding: 16px 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    header h1 {
+      font-family: 'Orbitron', monospace;
+      font-size: 18px;
+      font-weight: 900;
+      color: var(--cyan);
+      text-shadow: var(--glow);
+      letter-spacing: 4px;
+    }
+
+    nav { display: flex; gap: 8px; align-items: center; }
+
+    nav a {
+      color: var(--text-muted);
+      padding: 6px 16px;
+      text-decoration: none;
+      font-family: 'Orbitron', monospace;
+      font-size: 11px;
+      letter-spacing: 2px;
+      font-weight: 700;
+      transition: all 0.3s;
+      border: 1px solid transparent;
+      border-radius: 4px;
+    }
+    nav a:hover, nav a.active {
+      color: var(--cyan);
+      border-color: rgba(0,245,255,0.3);
+      background: rgba(0,245,255,0.06);
+      text-shadow: var(--glow);
+    }
+
+    /* ── HERO ── */
+    .hero {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      z-index: 2;
+      background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(0,245,255,0.06) 0%, transparent 70%),
+                  linear-gradient(180deg, #0a0e1a 0%, #0d1b2a 100%);
+    }
+
+    /* ── ORB ── */
+    .hero-orb {
+      position: absolute;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,245,255,0.08) 0%, transparent 70%);
+      animation: pulse 4s ease-in-out infinite;
+      pointer-events: none;
+    }
+    .hero-orb::before {
+      content: '';
+      position: absolute;
+      inset: 30px;
+      border-radius: 50%;
+      border: 1px solid rgba(0,245,255,0.12);
+      animation: spin 20s linear infinite;
+    }
+    .hero-orb::after {
+      content: '';
+      position: absolute;
+      inset: 80px;
+      border-radius: 50%;
+      border: 1px dashed rgba(0,245,255,0.08);
+      animation: spin 30s linear infinite reverse;
+    }
+
+    /* Extra decorative rings */
+    .hero-ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(0,245,255,0.05);
+      pointer-events: none;
+    }
+    .hero-ring:nth-child(2) {
+      width: 760px; height: 760px;
+      animation: spin 50s linear infinite;
+    }
+    .hero-ring:nth-child(3) {
+      width: 920px; height: 920px;
+      border-style: dashed;
+      border-color: rgba(0,245,255,0.03);
+      animation: spin 70s linear infinite reverse;
+    }
+
+    @keyframes pulse {
+      0%,100% { transform: scale(1);    opacity: 1; }
+      50%      { transform: scale(1.05); opacity: 0.8; }
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── HERO CONTENT ── */
+    .hero-content { position: relative; z-index: 2; }
+
+    .hero-label {
+      font-family: 'Orbitron', monospace;
+      font-size: 11px;
+      letter-spacing: 6px;
+      color: var(--cyan);
+      text-shadow: var(--glow);
+      margin-bottom: 24px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.3s;
+    }
+
+    .hero h2 {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(36px, 6vw, 64px);
+      font-weight: 900;
+      line-height: 1.1;
+      background: linear-gradient(135deg, #ffffff 0%, var(--cyan) 50%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 20px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.5s;
+    }
+
+    .hero p {
+      color: var(--text-muted);
+      font-size: 18px;
+      letter-spacing: 1px;
+      margin-bottom: 40px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.7s;
+    }
+
+    .btn-hero {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: transparent;
+      border: 1px solid var(--cyan);
+      color: var(--cyan);
+      padding: 14px 36px;
+      font-family: 'Orbitron', monospace;
+      font-size: 12px;
+      letter-spacing: 3px;
+      font-weight: 700;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.9s;
+      text-decoration: none;
+    }
+    .btn-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--cyan);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s;
+      z-index: -1;
+    }
+    .btn-hero:hover::before { transform: scaleX(1); }
+    .btn-hero:hover { color: #000; box-shadow: var(--glow-strong); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── CORNER DECORATIONS on hero ── */
+    .hero-corners .c {
+      position: absolute;
+      width: 24px; height: 24px;
+      border-color: rgba(0,245,255,0.35);
+      border-style: solid;
+      pointer-events: none;
+    }
+    .hero-corners .c-tl { top: 80px; left: 40px; border-width: 2px 0 0 2px; }
+    .hero-corners .c-tr { top: 80px; right: 40px; border-width: 2px 2px 0 0; }
+    .hero-corners .c-bl { bottom: 80px; left: 40px; border-width: 0 0 2px 2px; }
+    .hero-corners .c-br { bottom: 80px; right: 40px; border-width: 0 2px 2px 0; }
+
+    /* ── HUD SIDE DECORATIONS ── */
+    .hud-left, .hud-right {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      opacity: 0;
+      animation: fadeUp 1s ease forwards 1.2s;
+    }
+    .hud-left { left: 40px; align-items: flex-start; }
+    .hud-right { right: 40px; align-items: flex-end; }
+
+    .hud-line {
+      font-family: 'Orbitron', monospace;
+      font-size: 8px;
+      color: rgba(0,245,255,0.3);
+      letter-spacing: 3px;
+      white-space: nowrap;
+    }
+    .hud-bar {
+      width: 60px;
+      height: 1px;
+      background: linear-gradient(to right, var(--cyan), transparent);
+      opacity: 0.3;
+    }
+    .hud-right .hud-bar {
+      background: linear-gradient(to left, var(--cyan), transparent);
+    }
+
+    /* ── STATS ROW ── */
+    .hero-stats {
+      display: flex;
+      gap: 40px;
+      justify-content: center;
+      margin-top: 60px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 1.1s;
+    }
+    .stat-item {
+      text-align: center;
+      position: relative;
+    }
+    .stat-item::after {
+      content: '';
+      position: absolute;
+      right: -20px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 1px;
+      height: 30px;
+      background: rgba(0,245,255,0.15);
+    }
+    .stat-item:last-child::after { display: none; }
+    .stat-num {
+      font-family: 'Orbitron', monospace;
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--cyan);
+      text-shadow: var(--glow);
+      display: block;
+    }
+    .stat-label {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    /* ── SCROLL INDICATOR ── */
+    .scroll-hint {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Orbitron', monospace;
+      font-size: 9px;
+      letter-spacing: 3px;
+      color: var(--text-muted);
+      animation: bounce 2s ease-in-out infinite;
+      opacity: 0.6;
+    }
+    .scroll-hint::after {
+      content: '';
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, var(--cyan), transparent);
+    }
+    @keyframes bounce {
+      0%,100% { transform: translateX(-50%) translateY(0); }
+      50%      { transform: translateX(-50%) translateY(8px); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      header { padding: 14px 24px; }
+      nav a  { display: none; }
+      .hero h2 { font-size: 32px; }
+      .hud-left, .hud-right { display: none; }
+      .hero-stats { gap: 24px; }
+      .hero-corners .c-tl,
+      .hero-corners .c-tr { top: 90px; }
+      .hero-ring:nth-child(2),
+      .hero-ring:nth-child(3) { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Background layers -->
+<div class="grid-bg"></div>
+<div class="particles" id="particles"></div>
+
+<!-- ── HEADER ── -->
+<header>
+  <h1>X.1</h1>
+  <nav>
+    <a href="#home" class="active">Home</a>
+    <a href="about-section-1.html">About</a>
+    <a href="portfolio.html">Portofolio</a>
+    <a href="team.html">Team</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+</header>
+
+<!-- ── HOME / HERO SECTION ── -->
+<section class="hero" id="home">
+
+  <!-- Orb & rings -->
+  <div class="hero-orb"></div>
+  <div class="hero-ring"></div>
+  <div class="hero-ring"></div>
+
+  <!-- Corner HUD brackets -->
+  <div class="hero-corners">
+    <div class="c c-tl"></div>
+    <div class="c c-tr"></div>
+    <div class="c c-bl"></div>
+    <div class="c c-br"></div>
+  </div>
+
+  <!-- Side HUD decorations -->
+  <div class="hud-left">
+    <div class="hud-line">SYS // ONLINE</div>
+    <div class="hud-bar"></div>
+    <div class="hud-line">VER 2026.04</div>
+    <div class="hud-bar"></div>
+    <div class="hud-line">LAT: 00.0000</div>
+  </div>
+  <div class="hud-right">
+    <div class="hud-line">FUTURISTIC</div>
+    <div class="hud-bar"></div>
+    <div class="hud-line">MODE // ACTIVE</div>
+    <div class="hud-bar"></div>
+    <div class="hud-line">STATUS: OK</div>
+  </div>
+
+  <!-- Main content -->
+  <div class="hero-content">
+    <div class="hero-label">◈ WELCOME TO OUR PORTFOLIO ◈</div>
+    <h2>Halo! Kami Tim 4</h2>
+    <p>Dengan konsep Futuristic yang sedang terjadi di masa kini</p>
+    <a class="btn-hero" href="#portfolio">
+      <span>▶</span> Lihat Karya
+    </a>
+
+    <!-- Stats row -->
+    <div class="hero-stats">
+      <div class="stat-item">
+        <span class="stat-num">6</span>
+        <span class="stat-label">Anggota</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">6</span>
+        <span class="stat-label">Karya</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">04</span>
+        <span class="stat-label">Tim</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll hint -->
+  <div class="scroll-hint">SCROLL</div>
+
+</section>
+
+<script>
+  /* ── Particles ── */
+  const container = document.getElementById('particles');
+  for (let i = 0; i < 30; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random() * 100 + 'vw';
+    p.style.width  = p.style.height = (Math.random() * 2 + 1) + 'px';
+    p.style.animationDuration = (Math.random() * 15 + 10) + 's';
+    p.style.animationDelay   = (Math.random() * 15) + 's';
+    container.appendChild(p);
+  }
+</script>
+
+</body>
+</html>

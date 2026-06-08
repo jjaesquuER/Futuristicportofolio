@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio – Tim 4</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cyan:        #00f5ff;
+      --cyan-dim:    #00c8d4;
+      --blue-deep:   #0a0e1a;
+      --blue-mid:    #0d1b2a;
+      --blue-panel:  #0f2233;
+      --blue-card:   #112640;
+      --accent:      #38bdf8;
+      --accent2:     #7df9ff;
+      --glow:        0 0 20px rgba(0,245,255,0.35);
+      --glow-strong: 0 0 40px rgba(0,245,255,0.6);
+      --text-main:   #e0f4ff;
+      --text-muted:  #7eb8d4;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--blue-deep);
+      color: var(--text-main);
+      font-family: 'Rajdhani', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* SCANLINE */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent, transparent 2px,
+        rgba(0,245,255,0.018) 2px, rgba(0,245,255,0.018) 4px
+      );
+      pointer-events: none; z-index: 9999;
+    }
+
+    /* GRID BG */
+    .grid-bg {
+      position: fixed; inset: 0;
+      background-image:
+        linear-gradient(rgba(0,245,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,245,255,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      animation: gridMove 20s linear infinite;
+      pointer-events: none; z-index: 0;
+    }
+    @keyframes gridMove {
+      0%   { background-position: 0 0, 0 0; }
+      100% { background-position: 0 60px, 60px 0; }
+    }
+
+    /* PARTICLES */
+    .particles { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
+    .particle {
+      position: absolute; width: 2px; height: 2px;
+      background: var(--cyan); border-radius: 50%;
+      opacity: 0; animation: floatUp linear infinite;
+    }
+    @keyframes floatUp {
+      0%   { transform: translateY(100vh); opacity: 0; }
+      10%  { opacity: 0.7; }
+      90%  { opacity: 0.7; }
+      100% { transform: translateY(-10vh) translateX(30px); opacity: 0; }
+    }
+
+    /* HEADER */
+    header {
+      position: fixed; width: 100%; top: 0; left: 0;
+      background: rgba(10,14,26,0.88);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(0,245,255,0.15);
+      padding: 16px 60px;
+      display: flex; justify-content: space-between; align-items: center;
+      z-index: 1000;
+    }
+    header h1 {
+      font-family: 'Orbitron', monospace;
+      font-size: 18px; font-weight: 900;
+      color: var(--cyan); text-shadow: var(--glow); letter-spacing: 4px;
+    }
+    nav { display: flex; gap: 8px; }
+    nav a {
+      color: var(--text-muted); padding: 6px 16px;
+      text-decoration: none; font-family: 'Orbitron', monospace;
+      font-size: 11px; letter-spacing: 2px; font-weight: 700;
+      border: 1px solid transparent; border-radius: 4px; transition: all 0.3s;
+    }
+    nav a:hover, nav a.active {
+      color: var(--cyan);
+      border-color: rgba(0,245,255,0.3);
+      background: rgba(0,245,255,0.06);
+      text-shadow: var(--glow);
+    }
+
+    /* SECTION */
+    section { position: relative; z-index: 2; padding-top: 80px; }
+    .section-inner { max-width: 1200px; margin: auto; padding: 100px 60px; }
+
+    .section-header { text-align: center; margin-bottom: 70px; }
+    .section-tag {
+      display: inline-block;
+      font-family: 'Orbitron', monospace;
+      font-size: 10px; letter-spacing: 5px;
+      color: var(--cyan); text-shadow: var(--glow);
+      border: 1px solid rgba(0,245,255,0.3);
+      padding: 6px 18px; border-radius: 3px; margin-bottom: 18px;
+    }
+    h2.section-title {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(28px, 4vw, 42px); font-weight: 900; letter-spacing: 2px;
+      background: linear-gradient(135deg, #fff 30%, var(--cyan) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .section-line {
+      width: 60px; height: 2px;
+      background: linear-gradient(to right, var(--cyan), transparent);
+      margin: 20px auto 0;
+    }
+
+    /* REVEAL */
+    .reveal {
+      opacity: 0; transform: translateY(40px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* CORNER */
+    .corner {
+      position: absolute; width: 16px; height: 16px;
+      border-color: var(--cyan); border-style: solid; opacity: 0.5;
+    }
+    .corner-tl { top: 12px; left: 12px; border-width: 2px 0 0 2px; }
+    .corner-br { bottom: 12px; right: 12px; border-width: 0 2px 2px 0; }
+
+    /* PORTFOLIO GRID */
+    .portfolio-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    .portfolio-item {
+      background: var(--blue-card);
+      border: 1px solid rgba(0,245,255,0.1);
+      border-radius: 12px; overflow: hidden;
+      transition: all 0.4s; position: relative;
+    }
+    .portfolio-item:hover {
+      transform: translateY(-12px);
+      border-color: rgba(0,245,255,0.4);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5), var(--glow);
+    }
+    .portfolio-item::after {
+      content: '';
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+      transform: scaleX(0); transition: transform 0.4s;
+    }
+    .portfolio-item:hover::after { transform: scaleX(1); }
+
+    .portfolio-img-wrap { position: relative; overflow: hidden; height: 210px; }
+    .portfolio-item img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform 0.5s;
+      filter: brightness(0.8) saturate(0.9);
+    }
+    .portfolio-item:hover img {
+      transform: scale(1.08);
+      filter: brightness(1) saturate(1.1);
+    }
+
+    .portfolio-placeholder {
+      width: 100%; height: 100%;
+      display: none; flex-direction: column;
+      align-items: center; justify-content: center; gap: 10px;
+      background: linear-gradient(135deg, var(--blue-panel), var(--blue-card));
+    }
+    .ph-icon { font-size: 42px; filter: drop-shadow(0 0 12px rgba(0,245,255,0.5)); }
+    .ph-label { font-family: 'Orbitron', monospace; font-size: 9px; letter-spacing: 3px; color: rgba(0,245,255,0.4); }
+
+    .portfolio-img-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(17,38,64,0.9) 0%, transparent 60%);
+    }
+    .portfolio-num {
+      position: absolute; top: 14px; right: 14px;
+      font-family: 'Orbitron', monospace; font-size: 10px;
+      color: var(--cyan); background: rgba(0,245,255,0.1);
+      border: 1px solid rgba(0,245,255,0.3);
+      padding: 4px 10px; border-radius: 3px; letter-spacing: 2px;
+    }
+    .portfolio-body { padding: 22px 22px 26px; }
+    .portfolio-body h3 {
+      font-family: 'Orbitron', monospace;
+      font-size: 13px; font-weight: 700;
+      color: var(--accent2); margin-bottom: 10px; letter-spacing: 1px;
+    }
+    .portfolio-body p { color: var(--text-muted); font-size: 14px; line-height: 1.7; }
+
+    /* FOOTER */
+    footer {
+      text-align: center; padding: 28px 20px;
+      background: rgba(0,0,0,0.4);
+      border-top: 1px solid rgba(0,245,255,0.08);
+      font-family: 'Orbitron', monospace; font-size: 11px; letter-spacing: 2px;
+      color: var(--text-muted); position: relative; z-index: 2;
+    }
+    footer span { color: var(--cyan); }
+
+    @media (max-width: 768px) {
+      header { padding: 14px 24px; }
+      nav a  { display: none; }
+      .section-inner { padding: 80px 24px; }
+    }
+    @media (max-width: 500px) {
+      .portfolio-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+<div class="particles" id="particles"></div>
+
+<header>
+  <h1>X.1</h1>
+  <nav>
+    <a href="home-section-1.html">Home</a>
+    <a href="about-section-1.html">About</a>
+    <a href="portfolio.html" class="active">Portofolio</a>
+    <a href="team.html">Team</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+</header>
+
+<section id="portfolio">
+  <div class="section-inner">
+
+    <div class="section-header reveal">
+      <div class="section-tag">// OUR WORK</div>
+      <h2 class="section-title">Portfolio</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="portfolio-grid">
+
+      <div class="portfolio-item reveal" style="transition-delay:0.1s">
+        <div class="portfolio-img-wrap">
+          <img src="foto/supernova.jpeg" alt="Aespa"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="portfolio-placeholder"><div class="ph-icon">🎵</div><div class="ph-label">AESPA.JPEG</div></div>
+          <div class="portfolio-img-overlay"></div>
+          <div class="portfolio-num">01</div>
+        </div>
+        <div class="portfolio-body">
+          <h3>Supernova (Aespa)</h3>
+          <p>Lagu dengan konsep metaverse dan avatar digital. Visualnya yang serba Al sangat relevan sama tren teknologi yang sekarang sedang ramai di kalangan.</p>
+        </div>
+        <div class="corner corner-tl"></div>
+        <div class="corner corner-br"></div>
+      </div>
+
+      <div class="portfolio-item reveal" style="transition-delay:0.2s">
+        <div class="portfolio-img-wrap">
+          <img src="foto/SPRAYON.jpeg" alt="Spray-on Fabric"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="portfolio-placeholder"><div class="ph-icon">👗</div><div class="ph-label">SPRAYON.JPEG</div></div>
+          <div class="portfolio-img-overlay"></div>
+          <div class="portfolio-num">02</div>
+        </div>
+        <div class="portfolio-body">
+          <h3>Spray-on Fabric (Dr. Manel Torres)</h3>
+          <p>Teknologi kain semprot yang langsung membentuk pakaian di tubuh. Semprot sesuai ukuran tubuh dan dapat dicuci ulang.</p>
+        </div>
+        <div class="corner corner-tl"></div>
+        <div class="corner corner-br"></div>
+      </div>
+
+      <div class="portfolio-item reveal" style="transition-delay:0.3s">
+        <div class="portfolio-img-wrap">
+          <img src="foto/NFC.jpeg" alt="NFC Smart Ring"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="portfolio-placeholder"><div class="ph-icon">💍</div><div class="ph-label">NFC.JPEG</div></div>
+          <div class="portfolio-img-overlay"></div>
+          <div class="portfolio-num">03</div>
+        </div>
+        <div class="portfolio-body">
+          <h3>NFC Smart Ring (Mclear)</h3>
+          <p>Cincin pintar yang dapat menggantikan kartu pelajar. Cukup tap buat absen, pinjam buku di perpus, atau bayar secara cashless.</p>
+        </div>
+        <div class="corner corner-tl"></div>
+        <div class="corner corner-br"></div>
+      </div>
+
+      <div class="portfolio-item reveal" style="transition-delay:0.4s">
+        <div class="portfolio-img-wrap">
+          <img src="foto/HOLOGRAPHIC.jpeg" alt="Holographic Classroom"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="portfolio-placeholder"><div class="ph-icon">🥽</div><div class="ph-label">HOLOGRAPHIC.JPEG</div></div>
+          <div class="portfolio-img-overlay"></div>
+          <div class="portfolio-num">04</div>
+        </div>
+        <div class="portfolio-body">
+          <h3>Holographic Classroom (HoloLens/misocroft)</h3>
+          <p>Konsep belajar biologi atau sejarah lewat hologram 3D. Dapat melihat jantung manusia atau candi secara nyata di depan mata tanpa harus ke lokasi atau bedah barang asli.</p>
+        </div>
+        <div class="corner corner-tl"></div>
+        <div class="corner corner-br"></div>
+      </div>
+
+      <div class="portfolio-item reveal" style="transition-delay:0.5s">
+        <div class="portfolio-img-wrap">
+          <img src="foto/robot.jpeg"AI Robot"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="portfolio-placeholder"><div class="ph-icon">🤖</div><div class="ph-label">ROBOT.JPEG</div></div>
+          <div class="portfolio-img-overlay"></div>
+          <div class="portfolio-num">05</div>
+        </div>
+        <div class="portfolio-body">
+          <h3>AI Humanoid Robot (Tesla Optimus)</h3>
+          <p>Robot humanoid berbasis AI yang mampu melakukan pekerjaan manusia secara mandiri. Dirancang untuk membantu di rumah, pabrik, hingga lingkungan berbahaya sekalipun.</p>
+        </div>
+        <div class="corner corner-tl"></div>
+        <div class="corner corner-br"></div>
+      </div>
+
+      <div class="portfolio-item reveal" style="transition-delay:0.6s">
+        <div class="portfolio-img-wrap">
+          <img src="foto/chips.jpeg"Neuralink"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="portfolio-placeholder"><div class="ph-icon">🧠</div><div class="ph-label">NEURALINK.JPEG</div></div>
+          <div class="portfolio-img-overlay"></div>
+          <div class="portfolio-num">06</div>
+        </div>
+        <div class="portfolio-body">
+          <h3>Brain-Computer Interface (Neuralink)</h3>
+          <p>Chip otak yang memungkinkan manusia mengontrol perangkat digital hanya dengan pikiran. Membuka era baru komunikasi antara manusia dan mesin secara langsung.</p>
+        </div>
+        <div class="corner corner-tl"></div>
+        <div class="corner corner-br"></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 <span>Tim 4</span>. All rights reserved.</p>
+</footer>
+
+<script>
+  const c = document.getElementById('particles');
+  for (let i = 0; i < 30; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random() * 100 + 'vw';
+    p.style.width = p.style.height = (Math.random() * 2 + 1) + 'px';
+    p.style.animationDuration = (Math.random() * 15 + 10) + 's';
+    p.style.animationDelay = (Math.random() * 15) + 's';
+    c.appendChild(p);
+  }
+  const obs = new IntersectionObserver(entries =>
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
+    { threshold: 0.12 }
+  );
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>

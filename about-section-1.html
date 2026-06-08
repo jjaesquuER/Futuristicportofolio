@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About – Tim 4</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --cyan:        #00f5ff;
+      --cyan-dim:    #00c8d4;
+      --blue-deep:   #0a0e1a;
+      --blue-mid:    #0d1b2a;
+      --blue-panel:  #0f2233;
+      --blue-card:   #112640;
+      --accent:      #38bdf8;
+      --accent2:     #7df9ff;
+      --glow:        0 0 20px rgba(0,245,255,0.35);
+      --glow-strong: 0 0 40px rgba(0,245,255,0.6);
+      --text-main:   #e0f4ff;
+      --text-muted:  #7eb8d4;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--blue-deep);
+      color: var(--text-main);
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 400;
+      overflow-x: hidden;
+    }
+
+    /* ── SCANLINE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent, transparent 2px,
+        rgba(0,245,255,0.018) 2px, rgba(0,245,255,0.018) 4px
+      );
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ── ANIMATED GRID BG ── */
+    .grid-bg {
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,245,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,245,255,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      animation: gridMove 20s linear infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+    @keyframes gridMove {
+      0%   { background-position: 0 0, 0 0; }
+      100% { background-position: 0 60px, 60px 0; }
+    }
+
+    /* ── FLOATING PARTICLES ── */
+    .particles { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
+    .particle {
+      position: absolute;
+      width: 2px; height: 2px;
+      background: var(--cyan);
+      border-radius: 50%;
+      opacity: 0;
+      animation: float linear infinite;
+    }
+    @keyframes float {
+      0%   { transform: translateY(100vh) translateX(0); opacity: 0; }
+      10%  { opacity: 0.8; }
+      90%  { opacity: 0.8; }
+      100% { transform: translateY(-10vh) translateX(30px); opacity: 0; }
+    }
+
+    /* ── HEADER ── */
+    header {
+      position: fixed;
+      width: 100%;
+      background: rgba(10,14,26,0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(0,245,255,0.15);
+      padding: 16px 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+    }
+    header h1 {
+      font-family: 'Orbitron', monospace;
+      font-size: 18px;
+      font-weight: 900;
+      color: var(--cyan);
+      text-shadow: var(--glow);
+      letter-spacing: 4px;
+    }
+    nav { display: flex; gap: 8px; align-items: center; }
+    nav a {
+      color: var(--text-muted);
+      padding: 6px 16px;
+      text-decoration: none;
+      font-family: 'Orbitron', monospace;
+      font-size: 11px;
+      letter-spacing: 2px;
+      font-weight: 700;
+      transition: all 0.3s;
+      border: 1px solid transparent;
+      border-radius: 4px;
+    }
+    nav a:hover, nav a.active {
+      color: var(--cyan);
+      border-color: rgba(0,245,255,0.3);
+      background: rgba(0,245,255,0.06);
+      text-shadow: var(--glow);
+    }
+
+    /* ── ABOUT SECTION ── */
+    .about-section {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+      background: linear-gradient(180deg, transparent, rgba(0,245,255,0.02), transparent);
+      padding-top: 80px;
+    }
+
+    .section-inner {
+      max-width: 1200px;
+      margin: auto;
+      padding: 120px 60px;
+      width: 100%;
+    }
+
+    /* ── SECTION HEADER ── */
+    .section-header {
+      text-align: center;
+      margin-bottom: 70px;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .section-header.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .section-tag {
+      display: inline-block;
+      font-family: 'Orbitron', monospace;
+      font-size: 10px;
+      letter-spacing: 5px;
+      color: var(--cyan);
+      text-shadow: var(--glow);
+      border: 1px solid rgba(0,245,255,0.3);
+      padding: 6px 18px;
+      border-radius: 3px;
+      margin-bottom: 18px;
+    }
+
+    h2.section-title {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 900;
+      letter-spacing: 2px;
+      background: linear-gradient(135deg, #fff 30%, var(--cyan) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .section-line {
+      width: 60px;
+      height: 2px;
+      background: linear-gradient(to right, var(--cyan), transparent);
+      margin: 20px auto 0;
+    }
+
+    /* ── ABOUT MAIN CARD ── */
+    .about-box {
+      background: rgba(0,245,255,0.03);
+      border: 1px solid rgba(0,245,255,0.1);
+      border-radius: 12px;
+      padding: 50px 60px;
+      max-width: 860px;
+      margin: 0 auto 60px;
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.7s ease 0.15s, transform 0.7s ease 0.15s;
+    }
+    .about-box.visible { opacity: 1; transform: translateY(0); }
+
+    /* top glow line */
+    .about-box::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+    }
+    /* big decorative quote mark */
+    .about-box::after {
+      content: '"';
+      position: absolute;
+      top: -20px; left: 30px;
+      font-size: 160px;
+      color: rgba(0,245,255,0.05);
+      font-family: Georgia, serif;
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    .about-box p {
+      color: var(--text-muted);
+      font-size: 17px;
+      line-height: 1.95;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* corner brackets */
+    .about-box .corner {
+      position: absolute;
+      width: 16px; height: 16px;
+      border-color: var(--cyan);
+      border-style: solid;
+      opacity: 0.4;
+    }
+    .about-box .c-tl { top: 12px; left: 12px; border-width: 2px 0 0 2px; }
+    .about-box .c-tr { top: 12px; right: 12px; border-width: 2px 2px 0 0; }
+    .about-box .c-bl { bottom: 12px; left: 12px; border-width: 0 0 2px 2px; }
+    .about-box .c-br { bottom: 12px; right: 12px; border-width: 0 2px 2px 0; }
+
+    /* ── FEATURE CARDS ── */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .feature-card {
+      background: var(--blue-card);
+      border: 1px solid rgba(0,245,255,0.08);
+      border-radius: 10px;
+      padding: 28px 24px;
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+      transition: all 0.4s;
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    .feature-card.visible { opacity: 1; transform: translateY(0); }
+    .feature-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(0,245,255,0.35);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.4), var(--glow);
+    }
+
+    /* bottom glow line on hover */
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 100%; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+      transform: scaleX(0);
+      transition: transform 0.4s;
+    }
+    .feature-card:hover::before { transform: scaleX(1); }
+
+    .feature-icon {
+      font-size: 28px;
+      margin-bottom: 14px;
+      display: block;
+      filter: drop-shadow(0 0 8px rgba(0,245,255,0.5));
+    }
+
+    .feature-card h3 {
+      font-family: 'Orbitron', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--cyan);
+      margin-bottom: 10px;
+    }
+
+    .feature-card p {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      header { padding: 14px 24px; }
+      nav a  { display: none; }
+      .section-inner { padding: 80px 24px; }
+      .about-box { padding: 36px 28px; }
+      .feature-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+<div class="particles" id="particles"></div>
+
+<!-- ── HEADER ── -->
+<header>
+  <h1>X.1</h1>
+  <nav>
+    <a href="home-section-1.html">Home</a>
+    <a href="#about" class="active">About</a>
+    <a href="portfolio.html">Portofolio</a>
+    <a href="team.html">Team</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+</header>
+
+<!-- ── ABOUT SECTION ── -->
+<section class="about-section" id="about">
+  <div class="section-inner">
+
+    <!-- Header -->
+    <div class="section-header reveal">
+      <div class="section-tag">// ABOUT US</div>
+      <h2 class="section-title">The Future Is Now</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <!-- Main paragraph card -->
+    <div class="about-box reveal">
+      <p>
+        menunjukkan bahwa masa depan itu penuh dengan inovasi yang tidak terbatas dan sangat menarik untuk dijelajahi. Dampak dari konsep ini bukan sekadar soal visual yang keren, tapi juga untuk mengajak kita semua agar lebih berani berpikir kreatif dan visioner dalam menghadapi perubahan zaman. Apalagi di masa sekarang, perkembangan teknologi seperti AI dan desain yang serba modern sudah bukan lagi hal asing, melainkan sudah jadi bagian dari gaya hidup kita sehari-hari, sehingga konsep ini terasa sangat relevan untuk diangkat ke dalam sebuah karya website.
+      </p>
+      <div class="corner c-tl"></div>
+      <div class="corner c-tr"></div>
+      <div class="corner c-bl"></div>
+      <div class="corner c-br"></div>
+    </div>
+
+    <!-- Feature cards -->
+    <div class="feature-grid">
+      <div class="feature-card reveal" style="transition-delay:0.1s">
+        <span class="feature-icon">🚀</span>
+        <h3>INOVASI</h3>
+        <p>Mendorong kreativitas tanpa batas dalam setiap karya yang kami hadirkan.</p>
+      </div>
+      <div class="feature-card reveal" style="transition-delay:0.2s">
+        <span class="feature-icon">🤖</span>
+        <h3>TEKNOLOGI AI</h3>
+        <p>Memanfaatkan kecerdasan buatan sebagai bagian dari gaya hidup masa kini.</p>
+      </div>
+      <div class="feature-card reveal" style="transition-delay:0.3s">
+        <span class="feature-icon">🌐</span>
+        <h3>FUTURISTIK</h3>
+        <p>Desain serba modern yang relevan dengan perkembangan zaman yang terus bergerak.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<script>
+  /* ── Particles ── */
+  const container = document.getElementById('particles');
+  for (let i = 0; i < 30; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random() * 100 + 'vw';
+    p.style.width = p.style.height = (Math.random() * 2 + 1) + 'px';
+    p.style.animationDuration = (Math.random() * 15 + 10) + 's';
+    p.style.animationDelay   = (Math.random() * 15) + 's';
+    container.appendChild(p);
+  }
+
+  /* ── Scroll reveal ── */
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>

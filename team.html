@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Team – Tim 4</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cyan:        #00f5ff;
+      --blue-deep:   #0a0e1a;
+      --blue-mid:    #0d1b2a;
+      --blue-panel:  #0f2233;
+      --blue-card:   #112640;
+      --accent2:     #7df9ff;
+      --glow:        0 0 20px rgba(0,245,255,0.35);
+      --glow-strong: 0 0 40px rgba(0,245,255,0.6);
+      --text-main:   #e0f4ff;
+      --text-muted:  #7eb8d4;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--blue-deep);
+      color: var(--text-main);
+      font-family: 'Rajdhani', sans-serif;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent, transparent 2px,
+        rgba(0,245,255,0.018) 2px, rgba(0,245,255,0.018) 4px
+      );
+      pointer-events: none; z-index: 9999;
+    }
+
+    .grid-bg {
+      position: fixed; inset: 0;
+      background-image:
+        linear-gradient(rgba(0,245,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,245,255,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      animation: gridMove 20s linear infinite;
+      pointer-events: none; z-index: 0;
+    }
+    @keyframes gridMove {
+      0%   { background-position: 0 0, 0 0; }
+      100% { background-position: 0 60px, 60px 0; }
+    }
+
+    .particles { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
+    .particle {
+      position: absolute; width: 2px; height: 2px;
+      background: var(--cyan); border-radius: 50%;
+      opacity: 0; animation: floatUp linear infinite;
+    }
+    @keyframes floatUp {
+      0%   { transform: translateY(100vh); opacity: 0; }
+      10%  { opacity: 0.7; }
+      90%  { opacity: 0.7; }
+      100% { transform: translateY(-10vh) translateX(30px); opacity: 0; }
+    }
+
+    /* HEADER */
+    header {
+      position: fixed; width: 100%; top: 0; left: 0;
+      background: rgba(10,14,26,0.88);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(0,245,255,0.15);
+      padding: 16px 60px;
+      display: flex; justify-content: space-between; align-items: center;
+      z-index: 1000;
+    }
+    header h1 {
+      font-family: 'Orbitron', monospace;
+      font-size: 18px; font-weight: 900;
+      color: var(--cyan); text-shadow: var(--glow); letter-spacing: 4px;
+    }
+    nav { display: flex; gap: 8px; }
+    nav a {
+      color: var(--text-muted); padding: 6px 16px;
+      text-decoration: none; font-family: 'Orbitron', monospace;
+      font-size: 11px; letter-spacing: 2px; font-weight: 700;
+      border: 1px solid transparent; border-radius: 4px; transition: all 0.3s;
+    }
+    nav a:hover, nav a.active {
+      color: var(--cyan);
+      border-color: rgba(0,245,255,0.3);
+      background: rgba(0,245,255,0.06);
+      text-shadow: var(--glow);
+    }
+
+    /* SECTION */
+    section {
+      position: relative; z-index: 2; padding-top: 80px;
+      background: linear-gradient(180deg, transparent, rgba(0,245,255,0.015), transparent);
+    }
+    .section-inner { max-width: 1100px; margin: auto; padding: 100px 60px; }
+
+    .section-header { text-align: center; margin-bottom: 70px; }
+    .section-tag {
+      display: inline-block;
+      font-family: 'Orbitron', monospace;
+      font-size: 10px; letter-spacing: 5px;
+      color: var(--cyan); text-shadow: var(--glow);
+      border: 1px solid rgba(0,245,255,0.3);
+      padding: 6px 18px; border-radius: 3px; margin-bottom: 18px;
+    }
+    h2.section-title {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(28px, 4vw, 42px); font-weight: 900; letter-spacing: 2px;
+      background: linear-gradient(135deg, #fff 30%, var(--cyan) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .section-line {
+      width: 60px; height: 2px;
+      background: linear-gradient(to right, var(--cyan), transparent);
+      margin: 20px auto 0;
+    }
+
+    .reveal {
+      opacity: 0; transform: translateY(40px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* TEAM GRID */
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    .team-member {
+      background: var(--blue-card);
+      border: 1px solid rgba(0,245,255,0.08);
+      padding: 36px 20px 30px;
+      border-radius: 12px; text-align: center;
+      transition: all 0.4s; position: relative; overflow: hidden;
+    }
+    .team-member::before {
+      content: '';
+      position: absolute; bottom: 0; left: 0;
+      width: 100%; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+      transform: scaleX(0); transition: transform 0.4s;
+    }
+    .team-member:hover::before { transform: scaleX(1); }
+    .team-member:hover {
+      transform: translateY(-8px);
+      border-color: rgba(0,245,255,0.3);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.4), 0 0 20px rgba(0,245,255,0.1);
+    }
+
+    /* HUD badge top-left */
+    .member-badge {
+      position: absolute; top: 12px; left: 12px;
+      font-family: 'Orbitron', monospace; font-size: 9px; letter-spacing: 2px;
+      color: rgba(0,245,255,0.5);
+      background: rgba(0,245,255,0.06);
+      border: 1px solid rgba(0,245,255,0.15);
+      padding: 3px 8px; border-radius: 3px;
+    }
+
+    .team-avatar-wrap {
+      position: relative; display: inline-block; margin-bottom: 16px;
+    }
+    .team-avatar-wrap::before {
+      content: '';
+      position: absolute; inset: -4px; border-radius: 50%;
+      background: conic-gradient(var(--cyan), transparent, var(--cyan));
+      animation: spinRing 4s linear infinite;
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .team-member:hover .team-avatar-wrap::before { opacity: 1; }
+    @keyframes spinRing { to { transform: rotate(360deg); } }
+
+    .team-avatar-wrap img {
+      width: 90px; height: 90px; border-radius: 50%; object-fit: cover;
+      border: 2px solid rgba(0,245,255,0.2);
+      position: relative; z-index: 1; display: block;
+    }
+    .avatar-placeholder {
+      width: 90px; height: 90px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--blue-panel), var(--blue-mid));
+      border: 2px solid rgba(0,245,255,0.2);
+      display: none; align-items: center; justify-content: center;
+      font-size: 28px; position: relative; z-index: 1;
+    }
+
+    .team-member h4 {
+      font-family: 'Rajdhani', sans-serif; font-size: 15px; font-weight: 600;
+      color: var(--text-main); letter-spacing: 0.5px; margin-bottom: 6px;
+    }
+    .member-num {
+      font-family: 'Orbitron', monospace; font-size: 11px;
+      color: var(--cyan); letter-spacing: 2px; opacity: 0.8;
+    }
+
+    /* FOOTER */
+    footer {
+      text-align: center; padding: 28px 20px;
+      background: rgba(0,0,0,0.4);
+      border-top: 1px solid rgba(0,245,255,0.08);
+      font-family: 'Orbitron', monospace; font-size: 11px; letter-spacing: 2px;
+      color: var(--text-muted); position: relative; z-index: 2;
+    }
+    footer span { color: var(--cyan); }
+
+    @media (max-width: 768px) {
+      header { padding: 14px 24px; }
+      nav a  { display: none; }
+      .section-inner { padding: 80px 24px; }
+      .team-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+<div class="particles" id="particles"></div>
+
+<header>
+  <h1>X.1</h1>
+  <nav>
+    <a href="home-section-1.html">Home</a>
+    <a href="about-section-1.html">About</a>
+    <a href="portfolio.html">Portofolio</a>
+    <a href="team.html" class="active">Team</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+</header>
+
+<section id="team">
+  <div class="section-inner">
+
+    <div class="section-header reveal">
+      <div class="section-tag">// OUR PEOPLE</div>
+      <h2 class="section-title">Tim Kami</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="team-grid">
+
+      <div class="team-member reveal" style="transition-delay:0.10s">
+        <div class="member-badge">NO. 14</div>
+        <div class="team-avatar-wrap">
+          <img src="foto/nia.jpeg" alt="Kurnia"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="avatar-placeholder">👩</div>
+        </div>
+        <h4>Kurnia Trisnanti</h4>
+        <div class="member-num">14</div>
+      </div>
+
+      <div class="team-member reveal" style="transition-delay:0.15s">
+        <div class="member-badge">NO. 31</div>
+        <div class="team-avatar-wrap">
+          <img src="foto/ria.jpeg" alt="Sukmariah"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="avatar-placeholder">👩</div>
+        </div>
+        <h4>Sukmariah</h4>
+        <div class="member-num">31</div>
+      </div>
+
+      <div class="team-member reveal" style="transition-delay:0.20s">
+        <div class="member-badge">NO. 6</div>
+        <div class="team-avatar-wrap">
+          <img src="foto/dwi.jpeg" alt="Dwi"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="avatar-placeholder">👩</div>
+        </div>
+        <h4>Dwi Panggawati</h4>
+        <div class="member-num">6</div>
+      </div>
+
+      <div class="team-member reveal" style="transition-delay:0.25s">
+        <div class="member-badge">NO. 34</div>
+        <div class="team-avatar-wrap">
+          <img src="foto/tobby.jpeg" alt="Tobby"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="avatar-placeholder">👦</div>
+        </div>
+        <h4>Tobby Aydin Mahib</h4>
+        <div class="member-num">34</div>
+      </div>
+
+      <div class="team-member reveal" style="transition-delay:0.30s">
+        <div class="member-badge">NO. 4</div>
+        <div class="team-avatar-wrap">
+          <img src="foto/davira.jpeg" alt="Davira"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="avatar-placeholder">👩</div>
+        </div>
+        <h4>Davira Aulia Ramadhani</h4>
+        <div class="member-num">4</div>
+      </div>
+
+      <div class="team-member reveal" style="transition-delay:0.35s">
+        <div class="member-badge">NO. 27</div>
+        <div class="team-avatar-wrap">
+          <img src="foto/ramadhani.jpeg"Rama"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="avatar-placeholder">👦</div>
+        </div>
+        <h4>Ramadhani Maulana Yusuf</h4>
+        <div class="member-num">27</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 <span>Tim 4</span>. All rights reserved.</p>
+</footer>
+
+<script>
+  const c = document.getElementById('particles');
+  for (let i = 0; i < 30; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random() * 100 + 'vw';
+    p.style.width = p.style.height = (Math.random() * 2 + 1) + 'px';
+    p.style.animationDuration = (Math.random() * 15 + 10) + 's';
+    p.style.animationDelay = (Math.random() * 15) + 's';
+    c.appendChild(p);
+  }
+  const obs = new IntersectionObserver(entries =>
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
+    { threshold: 0.12 }
+  );
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
